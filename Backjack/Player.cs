@@ -48,6 +48,56 @@ namespace BlackJack
         public void GiveCard(Card card)
         {
             this.Hand.Add(card);
+            this.HandValue = GetHandValue();
+        }
+
+        private int GetHandValue()
+        {
+            int value = new int();
+            foreach (Card card in this.Hand)
+            {
+                value += card.Value;
+            }
+            return value;
+        }
+
+        private bool HandHasAce()
+        {
+            foreach (Card card in this.Hand)
+            {
+                if (card.Face == CardFace.Ace)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        private Card LowerAceValue(Card card)
+        {
+            if (card.Face != CardFace.Ace)
+            {
+                throw new Exception("Cannot lower the value of a card that is not an Ace");
+            }
+            else
+            {
+                card.Value = 1;
+            }
+            return card;
+        }
+
+        public string EnumerateHand()
+        {
+            string hand = null;
+            foreach (Card card in this.Hand)
+            {
+                hand += $"{card.Face}:{card.Suit} ";
+            }
+            return hand;
         }
     }
 }

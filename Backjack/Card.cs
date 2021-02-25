@@ -44,7 +44,7 @@ namespace BlackJack
             valueMap.Add("King", 10);
             //int value = (int)Enum.Parse(typeof(Face), card.Face.ToString());
             int v = valueMap[$"{f}"];
-            Console.WriteLine($"Value is: {v}");
+            //Console.WriteLine($"Value is: {v}");
             return v;
         }
     }

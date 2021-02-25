@@ -13,6 +13,7 @@ namespace BlackJack
         private List<Card> BonePile = new List<Card>();    // Cards not in play
         private readonly int NumberOfDecks = 2;    // Total number of decks to have in the game environment
         private readonly string[] acceptedValues = { "hit", "stand", "quit", "newgame" };    // Array of acceptable input values
+        private List<Player> Players = new List<Player>();
 
         // Environment is like a virtual game table.  Card decks and players are initialized here.
         public Environment()
@@ -24,16 +25,19 @@ namespace BlackJack
                 PutDecksInPlay();
                 Shuffle();
                 Player dealer = new Player("Ronald", true);
+                Players.Add(dealer);
                 this.Speak("Enter your name.");
                 string name = this.Listen(false);
                 Player player1 = new Player(name);
+                Players.Add(player1);
                 this.Speak($"Welcome to the game {player1.Name}");
-                string l;
+                Deal();
+                string input;
 
                 do
                 {
-                    l = this.Listen();
-                } while (l != "quit");
+                    input = this.Listen();
+                } while (input != "quit");
             }
         }
 
@@ -147,6 +151,41 @@ namespace BlackJack
             DateTime now = DateTime.Now;
             string time = now.ToString("HH:mm:ss");
             return time;
+        }
+
+        private void Deal()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                foreach (Player player in this.Players)
+                {
+                    Hit(player);
+                }
+            }
+            foreach (Player player in this.Players)
+            {
+                AnnounceHand(player);
+            }
+        }
+
+        private void AnnounceHand(Player player)
+        {
+            this.Speak($"{player.Name}'s hand: {player.EnumerateHand()}");
+        }
+
+        private void CheckInput(string input)
+        {
+            switch (input.ToLower())
+            {
+                case "hit":;
+                    break;
+            }
+        }
+
+        private void Hit(Player player)
+        {
+            Card card = this.Deck.GetCard();
+            player.GiveCard(card);
         }
     }
 }
