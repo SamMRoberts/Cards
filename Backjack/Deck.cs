@@ -52,8 +52,8 @@ namespace BlackJack
 
         public Card GetCard()
         {
-            Card card = this.Cards[0];
-            this.Cards.RemoveAt(0);
+            Card card = Cards[0];
+            Cards.RemoveAt(0);
             return card;
         }
     }

@@ -9,7 +9,6 @@ namespace BlackJack
     {
         public CardSuit Suit { get; set; }
         private CardFace face;
-        //public CardFace Face { get; set; }
         public CardFace Face
         {
             get { return this.face; }
@@ -42,9 +41,7 @@ namespace BlackJack
             valueMap.Add("Jack", 10);
             valueMap.Add("Queen", 10);
             valueMap.Add("King", 10);
-            //int value = (int)Enum.Parse(typeof(Face), card.Face.ToString());
             int v = valueMap[$"{f}"];
-            //Console.WriteLine($"Value is: {v}");
             return v;
         }
     }

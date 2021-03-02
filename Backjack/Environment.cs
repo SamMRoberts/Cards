@@ -13,33 +13,33 @@ namespace BlackJack
         private List<Deck> NewDecks = new List<Deck>();    // Card decks not in play       
         private List<Card> BonePile = new List<Card>();    // Cards not in play
         private readonly int NumberOfDecks = 2;    // Total number of decks to have in the game environment
-        private readonly string[] acceptedValues = { "hit", "stand", "quit", "newgame" };    // Array of acceptable input values
+        private readonly string[] acceptedValues = { "deal", "hit", "stand", "quit", "newgame" };    // Array of acceptable input values
         private List<Player> Seats = new List<Player>();
-        private Player Dealer;
-        private Player Player;
+        private readonly Player Dealer;
+        private readonly Player Player;
 
         // Environment is like a virtual game table.  Card decks and players are initialized here.
         public Environment()
         {
             if (EnvironmentHasDecks() == false)
             {
-                this.NewDecks.Clear();
+                NewDecks.Clear();
                 GetDecks();
                 PutDecksInPlay();
                 Shuffle();
                 Dealer = new Player("Dealer", true);
                 Seats.Add(Dealer);
-                this.Speak("Enter your name.");
-                string name = this.Listen(false);
+                Speak("Enter your name.");
+                string name = Listen(false);
                 Player = new Player(name);
                 Seats.Add(Player);
-                this.Speak($"Welcome to the game {Player.Name}");
+                Speak($"Welcome to the game {Player.Name}");
                 Deal();
                 string input;
 
                 do
                 {
-                    input = this.Listen();
+                    input = Listen();
                     CheckInput(input);
                 } while (input != "quit");
             }
@@ -48,7 +48,7 @@ namespace BlackJack
         // Check to see if the required number of decks are in the environment
         public bool EnvironmentHasDecks()
         {
-            int currentNumberOfDecks = this.NewDecks.Count;
+            int currentNumberOfDecks = NewDecks.Count;
             if (currentNumberOfDecks != NumberOfDecks)
             {
                 return false;
@@ -65,21 +65,21 @@ namespace BlackJack
             for (int x = 1; x <= NumberOfDecks; x++)
             {
                 Deck deck = new Deck();
-                this.NewDecks.Add(deck);
+                NewDecks.Add(deck);
             }
         }
 
         // Move decks to cards variable to put them in play
         public void PutDecksInPlay()
         {
-            foreach (Deck deck in this.NewDecks)
+            foreach (Deck deck in NewDecks)
             {
                 foreach (Card card in deck.Cards)
                 {
-                    this.Cards.Add(card);
+                    Cards.Add(card);
                 }
             }
-            this.NewDecks.Clear();
+            NewDecks.Clear();
         }
 
         // Shuffle cards
@@ -87,7 +87,7 @@ namespace BlackJack
         {
             List<Card> newCards = new List<Card>();
             List<int> shuffled = new List<int>();
-            int totalCards = this.Cards.Count;
+            int totalCards = Cards.Count;
             Random random = new Random();
 
             Console.WriteLine("Shuffling cards.");
@@ -97,7 +97,7 @@ namespace BlackJack
                 while (alreadyShuffled == false)
                 {
                     int getIndex = random.Next(totalCards);
-                    Card getCard = this.Cards[getIndex];
+                    Card getCard = Cards[getIndex];
 
                     if (shuffled.Contains(getIndex))
                     {
@@ -110,7 +110,6 @@ namespace BlackJack
                     }
                 }
             } while (newCards.Count != totalCards);
-            //this.Cards = newCards;
             Deck.Cards = newCards;
         }
 
@@ -160,14 +159,16 @@ namespace BlackJack
 
         private void Deal()
         {
+            Dealer.ClearHand();
+            Player.ClearHand();
             for (int i = 0; i < 2; i++)
             {
-                foreach (Player player in this.Seats)
+                foreach (Player player in Seats)
                 {
                     Hit(player);
                 }
             }
-            foreach (Player player in this.Seats)
+            foreach (Player player in Seats)
             {
                 AnnounceHand(player);
             }
@@ -175,7 +176,7 @@ namespace BlackJack
 
         private void AnnounceHand(Player player)
         {
-            this.Speak($"{player.Name}'s hand: {player.EnumerateHand()}");
+            Speak($"{player.Name}'s hand: {player.EnumerateHand()}");
         }
 
         private void CheckInput(string input)
@@ -185,14 +186,26 @@ namespace BlackJack
                 case "hit":
                     Hit(Player);
                     AnnounceHand(Player);
+                    CheckBust(Player);
+                    break;
+                case "deal":
+                    Deal();
                     break;
             }
         }
 
         private void Hit(Player player)
         {
-            Card card = this.Deck.GetCard();
-            player.GiveCard(card);
+            Card card = Deck.GetCard();
+            player.GiveCard(card);            
+        }
+
+        private void CheckBust(Player player)
+        {
+            if (player.Busted)
+            {
+                Console.WriteLine($"{player.Name} BUSTED!");
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ namespace BlackJack
         public int HandValue;
         private bool IsDealer = false;
         private static int instances = 0;
+        public bool Busted = false;
 
         public Player()
         {
@@ -25,14 +26,14 @@ namespace BlackJack
         public Player(string name)
         {
             instances++;
-            this.Name = name;
+            Name = name;
         }
 
         public Player(string name, bool isDealer)
         {
             instances++;
-            this.Name = name;
-            this.IsDealer = isDealer;
+            Name = name;
+            IsDealer = isDealer;
         }
 
         public static int GetInstances()
@@ -42,20 +43,20 @@ namespace BlackJack
 
         public bool GetIsDealer()
         {
-            return this.IsDealer;
+            return IsDealer;
         }
 
         public void GiveCard(Card card)
         {
-            this.Hand.Add(card);
-            this.HandValue = this.GetHandValue();
-            this.EvaluateAceValue();
+            Hand.Add(card);
+            HandValue = GetHandValue();
+            EvaluateValue();
         }
 
         private int GetHandValue()
         {
             int value = new int();
-            foreach (Card card in this.Hand)
+            foreach (Card card in Hand)
             {
                 value += card.Value;
             }
@@ -64,7 +65,7 @@ namespace BlackJack
 
         private bool HandHasAce()
         {
-            foreach (Card card in this.Hand)
+            foreach (Card card in Hand)
             {
                 if (card.Face.ToString().ToLower() == "ace")
                 {
@@ -74,19 +75,24 @@ namespace BlackJack
             return false;
         }
 
-        private void EvaluateAceValue()
+        private void EvaluateValue()
         {
-            if ((this.HandValue > 21) & (this.HandHasAce()))
+            if ((HandValue > 21) & (HandHasAce()))
             {
-                foreach (Card c in this.Hand)
+                foreach (Card c in Hand)
                 {
                     if ((c.Face.ToString().ToLower() == "ace") & (c.Value == 11))
                     {
-                        this.SetAceLowerValue(c);
-                        this.HandValue = this.GetHandValue();
+                        SetAceLowerValue(c);
+                        HandValue = GetHandValue();
                         break;
                     }
                 }
+            }
+            else if (HandValue > 21)
+            {
+                Busted = true;
+                // Busted
             }
         }
 
@@ -107,12 +113,19 @@ namespace BlackJack
         public string EnumerateHand()
         {
             string hand = null;
-            foreach (Card card in this.Hand)
+            foreach (Card card in Hand)
             {
                 hand += $"[{card.Face}:{card.Suit}] ";
             }
-            hand += $"Value: {this.HandValue}";
+            hand += $"Value: {HandValue}";
             return hand;
+        }
+
+        public void ClearHand()
+        {
+            Busted = false;
+            Hand.Clear();
+            HandValue = 0;
         }
     }
 }
