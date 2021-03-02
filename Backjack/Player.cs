@@ -48,7 +48,8 @@ namespace BlackJack
         public void GiveCard(Card card)
         {
             this.Hand.Add(card);
-            this.HandValue = GetHandValue();
+            this.HandValue = this.GetHandValue();
+            this.EvaluateAceValue();
         }
 
         private int GetHandValue()
@@ -65,19 +66,32 @@ namespace BlackJack
         {
             foreach (Card card in this.Hand)
             {
-                if (card.Face == CardFace.Ace)
+                if (card.Face.ToString().ToLower() == "ace")
                 {
                     return true;
-                }
-                else
-                {
-                    return false;
                 }
             }
             return false;
         }
 
-        private Card LowerAceValue(Card card)
+        private void EvaluateAceValue()
+        {
+            if ((this.HandValue > 21) & (this.HandHasAce()))
+            {
+                foreach (Card c in this.Hand)
+                {
+                    if ((c.Face.ToString().ToLower() == "ace") & (c.Value == 11))
+                    {
+                        this.SetAceLowerValue(c);
+                        this.HandValue = this.GetHandValue();
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Set Ace value to 1 instead of 11
+        private Card SetAceLowerValue(Card card)
         {
             if (card.Face != CardFace.Ace)
             {
@@ -95,8 +109,9 @@ namespace BlackJack
             string hand = null;
             foreach (Card card in this.Hand)
             {
-                hand += $"{card.Face}:{card.Suit} ";
+                hand += $"[{card.Face}:{card.Suit}] ";
             }
+            hand += $"Value: {this.HandValue}";
             return hand;
         }
     }
