@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BlackJack
 {
@@ -13,7 +14,9 @@ namespace BlackJack
         private List<Card> BonePile = new List<Card>();    // Cards not in play
         private readonly int NumberOfDecks = 2;    // Total number of decks to have in the game environment
         private readonly string[] acceptedValues = { "hit", "stand", "quit", "newgame" };    // Array of acceptable input values
-        private List<Player> Players = new List<Player>();
+        private List<Player> Seats = new List<Player>();
+        private Player Dealer;
+        private Player Player;
 
         // Environment is like a virtual game table.  Card decks and players are initialized here.
         public Environment()
@@ -24,19 +27,20 @@ namespace BlackJack
                 GetDecks();
                 PutDecksInPlay();
                 Shuffle();
-                Player dealer = new Player("Ronald", true);
-                Players.Add(dealer);
+                Dealer = new Player("Dealer", true);
+                Seats.Add(Dealer);
                 this.Speak("Enter your name.");
                 string name = this.Listen(false);
-                Player player1 = new Player(name);
-                Players.Add(player1);
-                this.Speak($"Welcome to the game {player1.Name}");
+                Player = new Player(name);
+                Seats.Add(Player);
+                this.Speak($"Welcome to the game {Player.Name}");
                 Deal();
                 string input;
 
                 do
                 {
                     input = this.Listen();
+                    CheckInput(input);
                 } while (input != "quit");
             }
         }
@@ -127,7 +131,8 @@ namespace BlackJack
 
                 if (validate)
                 {
-                    if (acceptedValues.Any(x => x.Contains(input)))
+                    string result = acceptedValues.FirstOrDefault(x => x == input);
+                    if (result != null)
                     {
                         isAcceptedInput = true;
                     }
@@ -157,12 +162,12 @@ namespace BlackJack
         {
             for (int i = 0; i < 2; i++)
             {
-                foreach (Player player in this.Players)
+                foreach (Player player in this.Seats)
                 {
                     Hit(player);
                 }
             }
-            foreach (Player player in this.Players)
+            foreach (Player player in this.Seats)
             {
                 AnnounceHand(player);
             }
@@ -177,7 +182,9 @@ namespace BlackJack
         {
             switch (input.ToLower())
             {
-                case "hit":;
+                case "hit":
+                    Hit(Player);
+                    AnnounceHand(Player);
                     break;
             }
         }
