@@ -16,8 +16,18 @@ namespace BlackJack
             {
                 this.face = value;
                 this.Value = SetValue(this.Face);
+                int f = (int)value;
+                if ((f >= 2) & (f <= 10))
+                {
+                    this.DisplayFace = f.ToString();    // Sets display face to Int value or first letter of face cards.  (Ex: 4 for Four, K for King)
+                }
+                else
+                {
+                    this.DisplayFace = this.face.ToString().Substring(0,1);
+                }      
             }
         }
+        public string DisplayFace { get; set; }
         public int Value { get; set; }
 
         public Card()
@@ -48,8 +58,7 @@ namespace BlackJack
 
     public enum CardFace
     {
-        Ace,
-        Two,
+        Two = 2,
         Three,
         Four,
         Five,
@@ -60,7 +69,8 @@ namespace BlackJack
         Ten,
         Jack,
         Queen,
-        King
+        King,
+        Ace
     }
 
     public enum CardSuit

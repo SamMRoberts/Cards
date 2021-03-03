@@ -12,6 +12,9 @@ namespace BlackJack
         private bool IsDealer = false;
         private static int instances = 0;
         public bool Busted = false;
+        public bool Stand = false;
+        public int Wins = 0;
+        public int Losses = 0;
 
         public Player()
         {
@@ -63,6 +66,7 @@ namespace BlackJack
             return value;
         }
 
+        // Check if hand has an Ace. Used for determining Ace value of 1 or 11
         private bool HandHasAce()
         {
             foreach (Card card in Hand)
@@ -75,6 +79,8 @@ namespace BlackJack
             return false;
         }
 
+
+        // Evaluate if Ace should be counted as 1 or 11
         private void EvaluateValue()
         {
             if ((HandValue > 21) & (HandHasAce()))
@@ -91,7 +97,7 @@ namespace BlackJack
             }
             else if (HandValue > 21)
             {
-                Busted = true;
+                //this.Busted = true;
                 // Busted
             }
         }
@@ -110,20 +116,22 @@ namespace BlackJack
             return card;
         }
 
+        // Returns a string containing cards in hand, hand value and wins:losses
         public string EnumerateHand()
         {
             string hand = null;
             foreach (Card card in Hand)
             {
-                hand += $"[{card.Face}:{card.Suit}] ";
+                hand += $"[{card.DisplayFace}:{card.Suit}] ";
             }
-            hand += $"Value: {HandValue}";
+            hand += $"(Value: {HandValue}) <W: {Wins} L: {Losses}>";
             return hand;
         }
 
         public void ClearHand()
         {
             Busted = false;
+            Stand = false;
             Hand.Clear();
             HandValue = 0;
         }

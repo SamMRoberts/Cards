@@ -13,7 +13,7 @@ namespace BlackJack
         private List<Deck> NewDecks = new List<Deck>();    // Card decks not in play       
         private List<Card> BonePile = new List<Card>();    // Cards not in play
         private readonly int NumberOfDecks = 2;    // Total number of decks to have in the game environment
-        private readonly string[] acceptedValues = { "deal", "hit", "stand", "quit", "newgame" };    // Array of acceptable input values
+        private readonly string[] acceptedValues = { "hit", "stand", "quit" };    // Array of acceptable input values
         private List<Player> Seats = new List<Player>();
         private readonly Player Dealer;
         private readonly Player Player;
@@ -37,6 +37,7 @@ namespace BlackJack
                 Deal();
                 string input;
 
+                // Do while input is not "quit"
                 do
                 {
                     input = Listen();
@@ -113,11 +114,12 @@ namespace BlackJack
             Deck.Cards = newCards;
         }
 
+        // Listens for input
         public string Listen()
         {
             return Listen(true);
         }
-
+        // Listens for input and validates input
         public string Listen(bool validate)
         {
             bool isAcceptedInput = !validate;
@@ -137,7 +139,7 @@ namespace BlackJack
                     }
                     else
                     {
-                        Console.WriteLine("Please enter an acceptable value.");
+                        Console.WriteLine("Please enter an acceptable value (\"hit\", \"stand\" or \"quit\").");
                     }
                 }
             } while (isAcceptedInput == false);
@@ -161,6 +163,7 @@ namespace BlackJack
         {
             Dealer.ClearHand();
             Player.ClearHand();
+            Console.Clear();
             for (int i = 0; i < 2; i++)
             {
                 foreach (Player player in Seats)
@@ -179,33 +182,134 @@ namespace BlackJack
             Speak($"{player.Name}'s hand: {player.EnumerateHand()}");
         }
 
+        // Perform functions based on input
         private void CheckInput(string input)
         {
-            switch (input.ToLower())
+            if ((Dealer.Stand == true) & (Player.Stand == true))
             {
-                case "hit":
-                    Hit(Player);
-                    AnnounceHand(Player);
-                    CheckBust(Player);
-                    break;
-                case "deal":
-                    Deal();
-                    break;
+                CheckWinner();           
+            }
+            else
+            {
+                switch (input.ToLower())
+                {
+                    case "hit":
+                        Hit(Player, true, true);
+                        if (Player.Busted)
+                        {
+                            Pause();
+                            Deal();
+                        }
+                        break;
+                    /*case "deal":
+                        Deal();
+                        break;*/
+                    case "stand":
+                        Player.Stand = true;
+                        DealerTurn();
+                        break;
+                }
             }
         }
 
+        private void CheckWinner()
+        {
+            if (Player.HandValue > Dealer.HandValue)
+            {
+                Player.Wins++;
+                Dealer.Losses++;
+                Console.WriteLine($"{Player.Name} WINS!");
+                Pause();
+                Deal();
+            }
+            else if (Dealer.HandValue > Player.HandValue)
+            {
+                Dealer.Wins++;
+                Player.Losses++;
+                Console.WriteLine($"{Dealer.Name} WINS!");
+                Pause();
+                Deal();
+            }
+            // House wins by default
+            else
+            {
+                Dealer.Wins++;
+                Player.Losses++;
+                Console.WriteLine($"{Dealer.Name} WINS!");
+                Pause();
+                Deal();
+            }            
+        }
+
+        // Player hit without announce and bust check
         private void Hit(Player player)
         {
             Card card = Deck.GetCard();
             player.GiveCard(card);            
         }
 
-        private void CheckBust(Player player)
+        // Player hit with announce and bust check
+        private void Hit(Player player, bool announce, bool checkBust)
         {
-            if (player.Busted)
+            Card card = Deck.GetCard();
+            player.GiveCard(card);
+            if (announce)
             {
-                Console.WriteLine($"{player.Name} BUSTED!");
+                AnnounceHand(player);
             }
+            if (checkBust)
+            {
+                if (CheckBust(player))
+                {
+                    player.Busted = true;
+                }
+            }            
+        }
+
+        // Check if player busted
+        private bool CheckBust(Player player)
+        {
+            if (player.HandValue > 21)
+            {
+                player.Busted = true;
+                Console.WriteLine($"{player.Name} BUSTED!");
+                player.Losses++;
+                if (player.GetIsDealer())
+                {
+                    Player.Wins++;
+                }
+                else
+                {
+                    Dealer.Wins++;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        // Dealer turn: Hits if < 17, stands if >= 17
+        private void DealerTurn()
+        {
+            while (Dealer.HandValue < 17)
+            {
+                Hit(Dealer, true, true);
+            }
+            if ((Dealer.HandValue >= 17) & (Dealer.Busted == false))
+            {
+                CheckWinner();
+                Dealer.Stand = true;                
+            }
+            if (Dealer.Busted)
+            {
+                Pause();
+                Deal();
+            }
+        }
+
+        private static void Pause()
+        {
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
         }
     }
 }

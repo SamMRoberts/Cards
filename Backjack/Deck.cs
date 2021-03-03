@@ -38,7 +38,7 @@ namespace BlackJack
 
             for (int sc = 0; sc < numOfSuits; sc++)
             {
-                for (int fc = 0; fc < numOfFaces; fc++)
+                for (int fc = 2; fc < numOfFaces + 2; fc++)
                 {
                     Card newCard = new Card
                     {
