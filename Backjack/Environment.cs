@@ -26,7 +26,7 @@ namespace BlackJack
                 NewDecks.Clear();
                 GetDecks();
                 PutDecksInPlay();
-                Shuffle();
+                Deck.Shuffle();
                 Dealer = new Player("Dealer", true);
                 Seats.Add(Dealer);
                 Speak("Enter your name.");
@@ -61,7 +61,7 @@ namespace BlackJack
         }
 
         // Gets a new deck of cards
-        public void GetDecks()
+        private void GetDecks()
         {
             for (int x = 1; x <= NumberOfDecks; x++)
             {
@@ -71,47 +71,16 @@ namespace BlackJack
         }
 
         // Move decks to cards variable to put them in play
-        public void PutDecksInPlay()
+        private void PutDecksInPlay()
         {
             foreach (Deck deck in NewDecks)
             {
                 foreach (Card card in deck.Cards)
                 {
-                    Cards.Add(card);
+                    Deck.Cards.Add(card);
                 }
             }
             NewDecks.Clear();
-        }
-
-        // Shuffle cards
-        public void Shuffle()
-        {
-            List<Card> newCards = new List<Card>();
-            List<int> shuffled = new List<int>();
-            int totalCards = Cards.Count;
-            Random random = new Random();
-
-            Console.WriteLine("Shuffling cards.");
-            do
-            {
-                bool alreadyShuffled = false;
-                while (alreadyShuffled == false)
-                {
-                    int getIndex = random.Next(totalCards);
-                    Card getCard = Cards[getIndex];
-
-                    if (shuffled.Contains(getIndex))
-                    {
-                        alreadyShuffled = true;
-                    }
-                    else
-                    {
-                        newCards.Add(getCard);
-                        shuffled.Add(getIndex);
-                    }
-                }
-            } while (newCards.Count != totalCards);
-            Deck.Cards = newCards;
         }
 
         // Listens for input

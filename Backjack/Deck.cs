@@ -56,5 +56,36 @@ namespace BlackJack
             Cards.RemoveAt(0);
             return card;
         }
+
+        // Shuffle cards
+        public void Shuffle()
+        {
+            List<Card> newCards = new List<Card>();
+            List<int> shuffled = new List<int>();
+            int totalCards = Cards.Count;
+            Random random = new Random();
+
+            Console.WriteLine("Shuffling cards.");
+            do
+            {
+                bool alreadyShuffled = false;
+                while (alreadyShuffled == false)
+                {
+                    int getIndex = random.Next(totalCards);
+                    Card getCard = this.Cards[getIndex];
+
+                    if (shuffled.Contains(getIndex))
+                    {
+                        alreadyShuffled = true;
+                    }
+                    else
+                    {
+                        newCards.Add(getCard);
+                        shuffled.Add(getIndex);
+                    }
+                }
+            } while (newCards.Count != totalCards);
+            Cards = newCards;
+        }
     }
 }
