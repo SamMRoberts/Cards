@@ -15,8 +15,8 @@ namespace BlackJack
         private readonly int NumberOfDecks = 2;    // Total number of decks to have in the game environment
         private readonly string[] acceptedValues = { "hit", "stand", "quit" };    // Array of acceptable input values
         private List<Player> Seats = new List<Player>();
-        private readonly Player Dealer;
-        private readonly Player Player;
+        private Player Dealer;
+        private Player Player;
 
         // Environment is like a virtual game table.  Card decks and players are initialized here.
         public Environment()

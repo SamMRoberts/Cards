@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BlackJack
 {
@@ -58,34 +60,47 @@ namespace BlackJack
         }
 
         // Shuffle cards
-        public void Shuffle()
+        public async void Shuffle()
+        {
+
+            Task<List<Card>> shuffleTask = AsyncShuffle();
+            this.Cards = await shuffleTask;
+        }
+
+        private async Task<List<Card>> AsyncShuffle()
         {
             List<Card> newCards = new List<Card>();
             List<int> shuffled = new List<int>();
             int totalCards = Cards.Count;
             Random random = new Random();
-
             Console.WriteLine("Shuffling cards.");
-            do
+            await Task.Run(() =>
             {
-                bool alreadyShuffled = false;
-                while (alreadyShuffled == false)
+                do
                 {
-                    int getIndex = random.Next(totalCards);
-                    Card getCard = this.Cards[getIndex];
+                    bool alreadyShuffled = false;
+                    while (alreadyShuffled == false)
+                    {
+                        int getIndex = random.Next(totalCards);
+                        Card getCard = this.Cards[getIndex];
 
-                    if (shuffled.Contains(getIndex))
-                    {
-                        alreadyShuffled = true;
+                        if (shuffled.Contains(getIndex))
+                        {
+                            alreadyShuffled = true;
+                        }
+                        else
+                        {
+                            newCards.Add(getCard);
+                            shuffled.Add(getIndex);
+                        }
                     }
-                    else
-                    {
-                        newCards.Add(getCard);
-                        shuffled.Add(getIndex);
-                    }
-                }
-            } while (newCards.Count != totalCards);
-            Cards = newCards;
+                    Thread.Sleep(20);
+                } while (newCards.Count != totalCards);
+                Console.WriteLine("Shuffling complete.");
+            });
+            //Cards = newCards;
+            return newCards;
         }
+        
     }
 }
