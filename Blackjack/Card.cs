@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
 
-namespace BlackJack
+namespace Blackjack
 {
     public class Card
     {

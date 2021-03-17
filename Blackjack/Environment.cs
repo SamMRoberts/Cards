@@ -2,48 +2,58 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace BlackJack
+namespace Blackjack
 {
-    class Environment
+    public class Environment
     {
-        private List<Card> Cards = new List<Card>();    // Hold card while shuffling
+        public List<Card> Cards = new List<Card>();    // Hold card while shuffling
         public Deck Deck = new Deck(false);    // Deck in play after shuffle
-        private List<Deck> NewDecks = new List<Deck>();    // Card decks not in play       
-        private List<Card> BonePile = new List<Card>();    // Cards not in play
-        private readonly int NumberOfDecks = 2;    // Total number of decks to have in the game environment
-        private readonly string[] acceptedValues = { "hit", "stand", "quit" };    // Array of acceptable input values
-        private List<Player> Seats = new List<Player>();
-        private Player Dealer;
-        private Player Player;
+        public List<Deck> NewDecks = new List<Deck>();    // Card decks not in play       
+        public List<Card> BonePile = new List<Card>();    // Cards not in play
+        public readonly int NumberOfDecks = 2;    // Total number of decks to have in the game environment
+        public readonly string[] acceptedValues = { "hit", "stand", "quit" };    // Array of acceptable input values
+        public List<Player> Seats = new List<Player>();
+        public Player Dealer;
+        public Player Player;
 
         // Environment is like a virtual game table.  Card decks and players are initialized here.
         public Environment()
         {
-            if (EnvironmentHasDecks() == false)
-            {
-                NewDecks.Clear();
-                GetDecks();
-                PutDecksInPlay();
-                Deck.Shuffle();
-                Dealer = new Player("Dealer", true);
-                Seats.Add(Dealer);
-                Speak("Enter your name.");
-                string name = Listen(false);
-                Player = new Player(name);
-                Seats.Add(Player);
-                Speak($"Welcome to the game {Player.Name}");
-                Deal();
-                string input;
+            Setup();
 
                 // Do while input is not "quit"
-                do
+                /*
+                 * do
                 {
                     input = Listen();
                     CheckInput(input);
                 } while (input != "quit");
-            }
+                */
+        }
+
+        private void Setup()
+        {
+            //LaunchUI();
+            NewDecks.Clear();
+            GetDecks();
+            PutDecksInPlay();
+            //Deck.Shuffle();
+            Deck.SyncShuffle();
+            
+            Dealer = new Player("Dealer", true);
+            Seats.Add(Dealer);
+            //Speak("Enter your name.");
+            //string name = Listen(false);
+            Player = new Player("Sam");
+            Seats.Add(Player);
+            //Speak($"Welcome to the game {Player.Name}");
+            Deal();
+            //string input;
         }
 
         // Check to see if the required number of decks are in the environment
@@ -91,34 +101,35 @@ namespace BlackJack
         // Listens for input and validates input
         public string Listen(bool validate)
         {
-            bool isAcceptedInput = !validate;
+            /*bool isAcceptedInput = !validate;
             string input;
 
             do
             {
-                Console.Write("> ");
-                input = Console.ReadLine();
+                //Console.Write("> ");
+                //input = //Console.ReadLine();
 
                 if (validate)
                 {
-                    string result = acceptedValues.FirstOrDefault(x => x == input);
+                    //string result = acceptedValues.FirstOrDefault(x => x == input);
                     if (result != null)
                     {
                         isAcceptedInput = true;
                     }
                     else
                     {
-                        Console.WriteLine("Please enter an acceptable value (\"hit\", \"stand\" or \"quit\").");
+                        //Console.WriteLine("Please enter an acceptable value (\"hit\", \"stand\" or \"quit\").");
                     }
                 }
             } while (isAcceptedInput == false);
 
-            return input;
+            return input;*/
+            return "false";
         }
 
         public void Speak(string output)
         {
-            Console.WriteLine($"[{GetTime()}] : {output}");
+            //Console.WriteLine($"[{GetTime()}] : {output}");
         }
 
         public string GetTime()
@@ -132,7 +143,7 @@ namespace BlackJack
         {
             Dealer.ClearHand();
             Player.ClearHand();
-            Console.Clear();
+            //Console.Clear();
             for (int i = 0; i < 2; i++)
             {
                 foreach (Player player in Seats)
@@ -152,7 +163,7 @@ namespace BlackJack
         }
 
         // Perform functions based on input
-        private void CheckInput(string input)
+        public void CheckInput(string input)
         {
             if ((Dealer.Stand == true) & (Player.Stand == true))
             {
@@ -187,7 +198,7 @@ namespace BlackJack
             {
                 Player.Wins++;
                 Dealer.Losses++;
-                Console.WriteLine($"{Player.Name} WINS!");
+                //Console.WriteLine($"{Player.Name} WINS!");
                 Pause();
                 Deal();
             }
@@ -195,7 +206,7 @@ namespace BlackJack
             {
                 Dealer.Wins++;
                 Player.Losses++;
-                Console.WriteLine($"{Dealer.Name} WINS!");
+                //Console.WriteLine($"{Dealer.Name} WINS!");
                 Pause();
                 Deal();
             }
@@ -204,7 +215,7 @@ namespace BlackJack
             {
                 Dealer.Wins++;
                 Player.Losses++;
-                Console.WriteLine($"{Dealer.Name} WINS!");
+                //Console.WriteLine($"{Dealer.Name} WINS!");
                 Pause();
                 Deal();
             }            
@@ -241,7 +252,7 @@ namespace BlackJack
             if (player.HandValue > 21)
             {
                 player.Busted = true;
-                Console.WriteLine($"{player.Name} BUSTED!");
+                //Console.WriteLine($"{player.Name} BUSTED!");
                 player.Losses++;
                 if (player.GetIsDealer())
                 {
@@ -277,8 +288,17 @@ namespace BlackJack
 
         private static void Pause()
         {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey(true);
+            //Console.WriteLine("Press any key to continue...");
+            //Console.ReadKey(true);
+        }
+
+        [STAThread]
+        private void LaunchUI()
+        {
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Blackjack.GameUI());
         }
     }
 }
