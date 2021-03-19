@@ -12,13 +12,13 @@ namespace Blackjack
     {
         Environment environment = new Environment();
         public GameUI()
-        {            
+        {
             InitializeComponent();
         }
 
         private void GameUI_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void sendButton_Click(object sender, EventArgs e)
