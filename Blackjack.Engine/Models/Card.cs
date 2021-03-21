@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
 
-namespace BlackJack
+namespace Blackjack.Engine.Models
 {
     public class Card
     {
@@ -23,8 +23,8 @@ namespace BlackJack
                 }
                 else
                 {
-                    this.DisplayFace = this.face.ToString().Substring(0,1);
-                }      
+                    this.DisplayFace = this.face.ToString().Substring(0, 1);
+                }
             }
         }
         public string DisplayFace { get; set; }
@@ -80,5 +80,4 @@ namespace BlackJack
         Club,
         Spade
     }
-
 }

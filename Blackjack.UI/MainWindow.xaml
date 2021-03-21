@@ -1,0 +1,20 @@
+﻿<Window x:Class="Blackjack.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Blackjack.Engine.ViewModels;assembly=Blackjack.Engine"
+        d:DataContext="{d:DesignInstance Type=viewModels:EnvironmentVM}"
+        mc:Ignorable="d"
+        Title="Blackjack (by Sam Roberts)" Height="470" Width="1053">
+    <Grid Margin="10,10,10,10">
+        <Button x:Name="hitBtn" Content="Hit" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="hitBtn_Click" IsEnabled="{Binding NewEnvironment.EnableTurn}"/>
+        <TextBox x:Name="consoleTb" HorizontalAlignment="Right" TextWrapping="Wrap" Width="204" BorderThickness="1,1,1,1" Text="{Binding NewEnvironment.Output}" Margin="0,0,0,10"/>
+        <Label x:Name="dealerLbl" Content="{Binding NewEnvironment.Dealer.Name}" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="1,1,1,1" Width="75" Height="25"/>
+        <TextBox x:Name="dealerHandTb" HorizontalAlignment="Left" Margin="0,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="757" BorderThickness="1,1,1,1" Text="{Binding NewEnvironment.Seats[0].DisplayHand}"/>
+        <Label x:Name="playerLbl" Content="{Binding NewEnvironment.Player.Name}" HorizontalAlignment="Left" Margin="0,77,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
+        <TextBox x:Name="player1HandTb" HorizontalAlignment="Left" Margin="0,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="757" Text="{Binding NewEnvironment.Seats[1].DisplayHand}"/>
+        <Button x:Name="standBtn" Content="Stand" HorizontalAlignment="Left" Margin="24,0,0,0" VerticalAlignment="Bottom" Click="standBtn_Click" IsEnabled="{Binding NewEnvironment.EnableTurn}"/>
+        <Button x:Name="dealBtn" Content="Deal" HorizontalAlignment="Left" Margin="63,0,0,0" VerticalAlignment="Bottom" IsEnabled="{Binding NewEnvironment.EnableDeal}" Click="dealBtn_Click"/>
+    </Grid>
+</Window>

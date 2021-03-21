@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlackJack
+namespace Blackjack.Engine.Models
 {
     public class Deck
     {
@@ -67,13 +67,43 @@ namespace BlackJack
             this.Cards = await shuffleTask;
         }
 
+
+        public void SyncShuffle()
+        {
+            List<Card> newCards = new List<Card>();
+            List<int> shuffled = new List<int>();
+            int totalCards = Cards.Count;
+            Random random = new Random();
+            do
+            {
+                bool alreadyShuffled = false;
+                while (alreadyShuffled == false)
+                {
+                    int getIndex = random.Next(totalCards);
+                    Card getCard = this.Cards[getIndex];
+
+                    if (shuffled.Contains(getIndex))
+                    {
+                        alreadyShuffled = true;
+                    }
+                    else
+                    {
+                        newCards.Add(getCard);
+                        shuffled.Add(getIndex);
+                    }
+                }
+                //Thread.Sleep(20);
+            } while (newCards.Count != totalCards);
+            Cards = newCards;
+        }
+
         private async Task<List<Card>> AsyncShuffle()
         {
             List<Card> newCards = new List<Card>();
             List<int> shuffled = new List<int>();
             int totalCards = Cards.Count;
             Random random = new Random();
-            Console.WriteLine("Shuffling cards.");
+            //Console.WriteLine("Shuffling cards.");
             await Task.Run(() =>
             {
                 do
@@ -96,11 +126,11 @@ namespace BlackJack
                     }
                     Thread.Sleep(20);
                 } while (newCards.Count != totalCards);
-                Console.WriteLine("Shuffling complete.");
+                //Console.WriteLine("Shuffling complete.");
             });
             //Cards = newCards;
             return newCards;
         }
-        
+
     }
 }
