@@ -1,47 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
 
-namespace BlackJack
+namespace Blackjack.Engine.Models
 {
-    public class Player
+    public class Player : INotifyPropertyChanged
     {
-        public string Name;
+        private string _displayHand;
+        public string Name { get; set; }
         public List<Card> Hand = new List<Card>();
         public int HandValue;
         private bool IsDealer = false;
-        private static int instances = 0;
         public bool Busted = false;
         public bool Stand = false;
         public int Wins = 0;
         public int Losses = 0;
+        public string DisplayHand
+        {
+            get { return _displayHand; }
+            set
+            {
+                _displayHand = value;
+                OnPropertyChanged(nameof(DisplayHand));
+            }
+        }
 
         public Player()
         {
-            instances++;
-        }
-
-        ~Player()
-        {
-            instances--;
         }
 
         public Player(string name)
         {
-            instances++;
-            Name = name;
+            this.Name = name;
         }
 
         public Player(string name, bool isDealer)
         {
-            instances++;
-            Name = name;
+            this.Name = name;
             IsDealer = isDealer;
-        }
-
-        public static int GetInstances()
-        {
-            return instances;
         }
 
         public bool GetIsDealer()
@@ -54,6 +50,7 @@ namespace BlackJack
             Hand.Add(card);
             HandValue = GetHandValue();
             EvaluateValue();
+            this.DisplayHand = EnumerateHand();
         }
 
         private int GetHandValue()
@@ -134,6 +131,13 @@ namespace BlackJack
             Stand = false;
             Hand.Clear();
             HandValue = 0;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
