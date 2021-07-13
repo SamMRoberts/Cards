@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blackjack.UI", "Blackjack.U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blackjack.Engine", "Blackjack.Engine\Blackjack.Engine.csproj", "{D9C292F3-5672-487B-96E2-426EE91D9A6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackjackTests", "BlackjackTests\BlackjackTests.csproj", "{6C774D9B-EB4E-447F-BB48-2556938879B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{D9C292F3-5672-487B-96E2-426EE91D9A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9C292F3-5672-487B-96E2-426EE91D9A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9C292F3-5672-487B-96E2-426EE91D9A6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C774D9B-EB4E-447F-BB48-2556938879B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C774D9B-EB4E-447F-BB48-2556938879B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C774D9B-EB4E-447F-BB48-2556938879B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C774D9B-EB4E-447F-BB48-2556938879B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
